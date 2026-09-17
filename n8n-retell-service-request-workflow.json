@@ -1,0 +1,54 @@
+{
+  "name": "Retell - Create Service Request",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "retell/create-service-request",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "retell-webhook",
+      "name": "Retell Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 300],
+      "webhookId": "retell-create-service-request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const REQUIRED = ['caller_name', 'phone', 'address_or_zip', 'service_type', 'issue_summary', 'urgency', 'preferred_window', 'existing_customer'];\nconst SERVICE_TYPES = new Set(['HVAC', 'plumbing', 'electrical', 'other']);\nconst URGENCIES = new Set(['emergency', 'same_day', 'routine']);\nconst input = $json.body ?? $json;\nconst missing = [];\nconst invalid = [];\nfor (const key of REQUIRED) {\n  const value = input[key];\n  if (value === undefined || value === null || value === '') missing.push(key);\n}\nfor (const key of ['caller_name', 'phone', 'address_or_zip', 'issue_summary', 'preferred_window']) {\n  if (missing.includes(key)) continue;\n  if (typeof input[key] !== 'string' || !String(input[key]).trim()) invalid.push(key);\n}\nif (!missing.includes('service_type') && !SERVICE_TYPES.has(input.service_type)) invalid.push('service_type');\nif (!missing.includes('urgency') && !URGENCIES.has(input.urgency)) invalid.push('urgency');\nif (!missing.includes('existing_customer') && typeof input.existing_customer !== 'boolean') invalid.push('existing_customer');\nif (missing.length || invalid.length) {\n  const body = { status: 'needs_human', message: 'The service request is missing or invalid information and needs human follow-up.' };\n  if (missing.length) body.missing_fields = missing;\n  if (invalid.length) body.invalid_fields = invalid;\n  return [{ json: body }];\n}\nconst confirmationReference = `DEMO-${Date.now().toString().slice(-6)}`;\nreturn [{ json: { status: 'received', confirmation_reference: confirmationReference, message: 'The service request was received for human scheduling review.' } }];"
+      },
+      "id": "validate-request",
+      "name": "Validate Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [520, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-to-retell",
+      "name": "Respond to Retell",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [780, 300]
+    }
+  ],
+  "connections": {
+    "Retell Webhook": {"main": [[{"node": "Validate Request", "type": "main", "index": 0}]]},
+    "Validate Request": {"main": [[{"node": "Respond to Retell", "type": "main", "index": 0}]]}
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "retell-demo-v2",
+  "meta": {"templateCredsSetupCompleted": true},
+  "tags": [{"name": "portfolio-demo"}]
+}

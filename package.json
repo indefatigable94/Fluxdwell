@@ -1,0 +1,10 @@
+{
+  "name": "habib-ai-builder-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Personal AI-builder portfolio demos: Retell voice intake + n8n validation",
+  "scripts": {
+    "test": "node tests/validate-service-request.test.js",
+    "demo:validate": "node scripts/demo-validate.js"
+  }
+}

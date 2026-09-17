@@ -1,0 +1,5 @@
+{
+  "status": "needs_human",
+  "missing_fields": ["phone"],
+  "message": "The service request is missing or invalid information and needs human follow-up."
+}

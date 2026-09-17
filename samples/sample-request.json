@@ -1,0 +1,10 @@
+{
+  "caller_name": "Jordan Lee",
+  "phone": "609-555-0147",
+  "address_or_zip": "08540",
+  "service_type": "HVAC",
+  "issue_summary": "AC is running but not cooling",
+  "urgency": "same_day",
+  "preferred_window": "tomorrow morning",
+  "existing_customer": false
+}

@@ -1,0 +1,64 @@
+{
+  "name": "create_service_request",
+  "description": "Create a home-service lead after the caller has confirmed all required intake details. Use this only after collecting caller_name, phone, address_or_zip, service_type, issue_summary, urgency, preferred_window, and existing_customer.",
+  "method": "POST",
+  "payload_args_only": true,
+  "parameters": {
+    "type": "object",
+    "required": [
+      "caller_name",
+      "phone",
+      "address_or_zip",
+      "service_type",
+      "issue_summary",
+      "urgency",
+      "preferred_window",
+      "existing_customer"
+    ],
+    "properties": {
+      "caller_name": {
+        "type": "string",
+        "description": "The caller's confirmed full name."
+      },
+      "phone": {
+        "type": "string",
+        "description": "The best confirmed callback phone number."
+      },
+      "address_or_zip": {
+        "type": "string",
+        "description": "The service address or ZIP code provided by the caller."
+      },
+      "service_type": {
+        "type": "string",
+        "enum": ["HVAC", "plumbing", "electrical", "other"],
+        "description": "The type of service the caller needs."
+      },
+      "issue_summary": {
+        "type": "string",
+        "description": "A short factual summary using the caller's own words."
+      },
+      "urgency": {
+        "type": "string",
+        "enum": ["emergency", "same_day", "routine"],
+        "description": "Urgency selected after asking the caller."
+      },
+      "preferred_window": {
+        "type": "string",
+        "description": "The caller's preferred appointment window."
+      },
+      "existing_customer": {
+        "type": "boolean",
+        "description": "Whether the caller confirmed they are an existing customer."
+      }
+    }
+  },
+  "response_example": {
+    "status": "received",
+    "confirmation_reference": "DEMO-1042",
+    "message": "The service request was received for human scheduling review."
+  },
+  "failure_example": {
+    "status": "needs_human",
+    "message": "The request needs a human callback because the downstream system did not confirm it."
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "demo": "retell-n8n-validation",
+  "ran_at": "2026-09-17T20:27:28.228Z",
+  "note": "Local executable proof. Live Retell/n8n screenshots go in docs/assets/ when dashboards are reachable.",
+  "golden_path": {
+    "input_keys": [
+      "caller_name",
+      "phone",
+      "address_or_zip",
+      "service_type",
+      "issue_summary",
+      "urgency",
+      "preferred_window",
+      "existing_customer"
+    ],
+    "response": {
+      "status": "received",
+      "confirmation_reference": "DEMO-001042",
+      "message": "The service request was received for human scheduling review."
+    }
+  },
+  "failure_path": {
+    "scenario": "missing phone",
+    "response": {
+      "status": "needs_human",
+      "message": "The service request is missing or invalid information and needs human follow-up.",
+      "missing_fields": [
+        "phone"
+      ]
+    }
+  }
+}

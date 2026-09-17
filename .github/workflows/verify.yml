@@ -1,0 +1,30 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate JSON artifacts
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('tool-schema.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('n8n-retell-service-request-workflow.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('samples/sample-request.json','utf8'))"
+      - name: Run validation tests
+        run: npm test
+      - name: Basic secret scan
+        run: |
+          if grep -RInE --exclude-dir=.git --exclude-dir=node_modules \
+            'sk-[A-Za-z0-9]{20,}|BEGIN (RSA |OPENSSH )?PRIVATE KEY' .; then
+            echo "Possible secret found"
+            exit 1
+          fi
+          echo "Basic secret scan clean"
