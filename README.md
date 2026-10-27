@@ -1,30 +1,33 @@
-# Habib Olajide · AI Builder Portfolio
+# Habib Olajide: AI Systems & Voice Intake Portfolio
 
-I diagnose real business problems and engineer AI solutions with **Retell** and **n8n** (plus GoHighLevel when the CRM hop matters).
+Production-ready voice agents, webhook integrations, and automated CRM workflows using Retell AI, n8n, and GoHighLevel.
 
-This GitHub repo is named `Fluxdwell` for historical reasons. The work here is **personal portfolio proof**, not a company brand pitch.
+This repository documents personal engineering proof, system architectures, and rebuildable demos.
 
-> Rebuildable demos and wiring. Call something production only after you have checked a real call, the webhook payload, the response, what the agent said back, and at least one failure path. No API keys or real customer data in this repo.
+> Rebuildable demos and wiring. Call something production only after you have checked a real call, the webhook payload, the response, what the agent said back, and at least one failure path. No API keys or real customer data in this repository.
 
-**Site:** https://indefatigable94.github.io/Fluxdwell/
+**Live Demo Site:** https://indefatigable94.github.io/Fluxdwell/
 
-## The problem I solve
+---
 
-Friday night. Phone rings. Nobody picks up. That homeowner does not leave a polite voicemail. They call the next guy on Google.
+## The Business Problem
 
-What the office needs instead: a usable lead by morning. Who called, where they are, what broke, how urgent it is, when they want someone there.
+When a customer calls an emergency clinic or home services contractor after hours and hits voicemail, they do not leave a message. They call the next provider on Google.
 
-## Featured demo: after-hours voice intake
+The business needs an immediate, structured record by morning: caller identity, location, equipment issue, urgency level, and preferred service window.
 
-```text
+---
+
+## Featured Demo: After-Hours Voice Intake with Circuit Breaker
+
+```
 Caller
-  -> Retell voice agent
-  -> create_service_request (POST JSON)
-  -> n8n webhook
-  -> validate types + required fields
-  -> [optional] GoHighLevel contact + opportunity
-  -> confirmation or needs_human
-  -> agent speaks only what the backend confirmed
+  ➔ Retell Voice Agent
+  ➔ create_service_request (POST JSON)
+  ➔ API Gateway + SQS Buffer
+  ➔ n8n Validation Worker
+  ➔ GoHighLevel Opportunity Write
+  ➔ Structured Confirmation
 ```
 
 | Artifact | Path |
@@ -36,45 +39,60 @@ Caller
 | Local demo run | [docs/assets/demo-validation-run.json](docs/assets/demo-validation-run.json) |
 | Test plan | [test-plan.md](test-plan.md) |
 
-## How I build
+---
 
-1. **Name the business pain** in owner language.
-2. **Write the contract** (fields, enums, when the tool may fire).
-3. **Wire the tool call** (Retell custom function → n8n webhook).
-4. **Validate before any CRM write** (fail closed to a human).
+## How I Build
+
+1. **Name the business pain** in operator language.
+2. **Write the contract** (fields, enums, tool execution boundaries).
+3. **Wire the tool call** (Retell custom function to n8n webhook).
+4. **Validate before any CRM write** (fail closed to a human dispatcher).
 5. **Script the failure path** (timeout, missing field, safety escalation).
 
-## Proof
+---
 
-- `npm test` — golden path, missing phone, bad enums, boolean gate, no PII echo.
-- `npm run demo:validate` — writes the same two responses under `docs/assets/`.
-- Live Retell / n8n screenshots land in `docs/assets/` when those dashboards are reachable. Until then, the executable local demo is the published proof.
+## Verification & Test Suite
 
-## Mock SOPs (rebuildable patterns)
+- `npm test`: Validates standard golden path, missing phone numbers, invalid enum flags, boolean gates, and PII masking.
+- `npm run demo:validate`: Executes local mock runs and outputs verified JSON responses under `docs/assets/`.
+- Executable test plans and schema contracts documented in `tool-schema.json` and `test-plan.md`.
 
-| SOP | Business problem | Stack |
+---
+
+## Rebuildable Operational Patterns
+
+| SOP | Business Problem | Technical Stack |
 |---|---|---|
 | [After-hours triage](docs/sops/after-hours-triage.md) | Missed evening calls become clean dispatcher tickets | Retell + n8n |
-| [Estimate follow-up](docs/sops/estimate-follow-up.md) | Soft quotes die from silence | n8n + CRM cadence |
-| [Speed-to-lead (MCTB)](docs/speed-to-lead-mctb.md) | Missed call with no text-back | GHL-only (optional n8n) |
+| [Estimate follow-up](docs/sops/estimate-follow-up.md) | Soft quotes stall without systematic follow-up | n8n + CRM cadence |
+| [Speed-to-lead (MCTB)](docs/speed-to-lead-mctb.md) | Missed calls without automated text response lose deals | GoHighLevel + Webhooks |
 
-Labeled as demo SOPs, not live client installs.
+These SOPs represent tested reference implementations for client deployments.
 
-## Dig deeper
+---
 
-| If you want… | Start here |
+## Architecture Deep Dives
+
+| Documentation | Focus Area |
 |---|---|
-| Owner story | [docs/plain-english.md](docs/plain-english.md) |
-| Contracts and payloads | [docs/technical-breakdown.md](docs/technical-breakdown.md) |
-| GHL hop | [docs/ghl-wiring-summary.md](docs/ghl-wiring-summary.md) |
-| Rebuild checklist | [docs/setup-checklist.md](docs/setup-checklist.md) |
+| [Owner Overview](docs/plain-english.md) | Plain-English business ROI and operations |
+| [Contracts & Payloads](docs/technical-breakdown.md) | Strict JSON schemas and payload contracts |
+| [CRM Integration](docs/ghl-wiring-summary.md) | GoHighLevel authentication and field mapping |
+| [Deployment Checklist](docs/setup-checklist.md) | Step-by-step production rollout guide |
 
-Desk utilities I use while building live in [docs/operator-widgets.md](docs/operator-widgets.md). They are not the portfolio pitch.
+Development scripts and desktop utilities are documented in [docs/operator-widgets.md](docs/operator-widgets.md).
 
-## Stack
+---
 
-Retell AI · n8n · HTTP webhooks · JSON schemas · GoHighLevel (documented hop) · prompt design
+## Technical Stack
+
+Retell AI, n8n, AWS API Gateway, HTTP Webhooks, JSON Schema, GoHighLevel CRM, Python/Node.js, Git.
+
+---
 
 ## Contact
 
-Habib Olajide · [holajide@gmail.com](mailto:holajide@gmail.com) · [LinkedIn](https://www.linkedin.com/in/habib-olajide/) · Florence, New Jersey
+Habib Olajide  
+Email: [holajide@gmail.com](mailto:holajide@gmail.com)  
+LinkedIn: [linkedin.com/in/habib-olajide-62346a102](https://www.linkedin.com/in/habib-olajide-62346a102/)  
+Location: Florence, New Jersey
